@@ -35,7 +35,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Nome e marca do coche"
-        android:layout_below="@id/rgAdd"/>
+        android:layout_below="@id/rgAdd"
+        android:inputType="textShortMessage"/>
 
     <Button
         android:id="@+id/btnAdd"
