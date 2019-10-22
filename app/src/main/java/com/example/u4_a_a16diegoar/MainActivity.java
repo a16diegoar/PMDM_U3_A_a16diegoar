@@ -1,8 +1,10 @@
 package com.example.u4_a_a16diegoar;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -68,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
                 OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(rutaCompleta, modo))
             ) {
 
+            Log.i(TAG, "Escribindo no ficheiro " + rutaCompleta.toString());
             osw.write(linea+"\n");
             Log.i(TAG, "Escrita línea \"" + linea + "\"");
 
@@ -77,6 +80,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showDatos(View v) {
+        Log.d(TAG, "Abrindo dialogo");
+        //Amosar dialogo
+        AlertDialog.Builder db = new AlertDialog.Builder(this);
+        db.setTitle("Ver datos");
+        db.setMessage("Queres ver os datos nunha lista ou nun menú desplegable?");
+        db.setCancelable(true);
+        db.setPositiveButton("Lista", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
 
+            }
+        });
+        db.setNegativeButton("Desplegable", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        db.create();
+        db.show();
     }
 }
