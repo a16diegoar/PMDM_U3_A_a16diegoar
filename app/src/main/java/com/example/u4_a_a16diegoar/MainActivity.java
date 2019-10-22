@@ -1,10 +1,7 @@
 package com.example.u4_a_a16diegoar;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -13,16 +10,22 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.FileReader;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "### U4_A_a16diegoar ###";
+    public static final int COD_LV = 11;
+    public static final int COD_SPN = 6;
 
     private final String FILE = "coches.txt";
 
@@ -63,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         if (rg.getCheckedRadioButtonId() == R.id.rbEngadir) {
             modo = true;
         }
-        Log.i(TAG, "Establecido modo " + (modo ? "sobreescritura" : "append"));
+        Log.i(TAG, "Establecido modo " + (modo ? "append" : "sobreescritura"));
 
         //Escribir
         try (
@@ -89,16 +92,49 @@ public class MainActivity extends AppCompatActivity {
         db.setPositiveButton("Lista", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                abrirActiv(COD_LV);
             }
         });
         db.setNegativeButton("Desplegable", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                abrirActiv(COD_SPN);
             }
         });
         db.create();
         db.show();
+    }
+
+    private void abrirActiv(int vista) {
+        //Un pouco innecesario, pero así é mais facil engadir novas formas de visualizar os datos
+        Intent i = null;
+        if (vista == COD_LV) {
+            i = new Intent(this, VerDatosListview.class);
+        } else if (vista == COD_SPN) {
+            i = new Intent(this, VerDatosSpinner.class);
+        }
+
+        Log.d(TAG, "Creando array de datos");
+        //Gardar os datos nun array
+        ArrayList<String> datos = new ArrayList<>();
+        try (
+                BufferedReader br = new BufferedReader(new FileReader(rutaCompleta))
+                ) {
+            String l = br.readLine();
+            while (l != null) {
+                Log.d(TAG, "Engadindo \""+l+"\"");
+                datos.add(l);
+                l = br.readLine();
+            }
+
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        }
+
+        Log.d(TAG, "Array creado con "+datos.size()+" items");
+        if (i != null) {
+            i.putExtra("DATOS", datos);
+            startActivity(i);
+        }
     }
 }
